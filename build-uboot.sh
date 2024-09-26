@@ -24,6 +24,7 @@ true ${DISABLE_MKIMG:=0}
 UBOOT_REPO=https://github.com/friendlyarm/uboot-rockchip
 UBOOT_BRANCH=nanopi6-v2017.09
 BOARD=nanopi6
+UBOOT_TARGET=${2:-nanopi6}
 
 TOPPATH=$PWD
 OUT=$TOPPATH/out
@@ -35,7 +36,7 @@ true ${uboot_src:=${OUT}/uboot-${SOC}}
 true ${UBOOT_SRC:=${uboot_src}}
 
 function usage() {
-    echo "Usage: $0 <img dir>"
+    echo "Usage: $0 <img dir> [nanopi6|nanopc-t6]"
     echo "# example:"
     echo "# clone uboot source from github:"
     echo "    git clone ${UBOOT_REPO} --depth 1 -b ${UBOOT_BRANCH} ${UBOOT_SRC}"
@@ -80,7 +81,7 @@ fi
 true ${TARGET_OS:=$(echo ${1,,}|sed 's/\///g')}
 
 case ${TARGET_OS} in
-buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher )
+buildroot* | friendlycore-focal-arm64 | openmediavault-* | debian-* | ubuntu-* | friendlywrt* | eflasher | nixos-* )
     ;;
 *)
     echo "Error: Unsupported target OS: ${TARGET_OS}"
@@ -131,7 +132,7 @@ fi
 
 cd ${UBOOT_SRC}
 make distclean
-./make.sh ${BOARD}
+./make.sh ${UBOOT_TARGET}
 
 if [ $? -ne 0 ]; then
     echo "failed to build uboot."

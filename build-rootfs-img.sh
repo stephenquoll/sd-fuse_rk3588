@@ -96,6 +96,11 @@ make_ext4_img() {
     friendlywrt* | buildroot*)
         # set default uid/gid to 0
         MKFS_OPTS="-0 ${MKFS_OPTS}"
+	;;
+    openmediavault-* | nixos* )
+        # disable overlayfs for openmediavault
+        cp ${TOP}/prebuilt/parameter-ext4.txt ${TOP}/${TARGET_OS}/parameter.txt
+	MKFS_OPTS="-E android_sparse -t ext4 -L nixos -M /root -b 4096"
         ;;
     *)
         ;;
