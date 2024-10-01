@@ -81,7 +81,7 @@ clean_rootfs() {
             rm -fr var/lib/NetworkManager/secret_key
             rm -fr var/lib/NetworkManager/timestamps
         fi
-        (cd dev && find . ! -type d -exec rm {} \;)
+        [ -d dev ] && (cd dev && find . ! -type d -exec rm {} \;)
     })
 }
 clean_rootfs ${ROOTFS_DIR}
@@ -98,8 +98,6 @@ make_ext4_img() {
         MKFS_OPTS="-0 ${MKFS_OPTS}"
 	;;
     openmediavault-* | nixos* )
-        # disable overlayfs for openmediavault
-        cp ${TOP}/prebuilt/parameter-ext4.txt ${TOP}/${TARGET_OS}/parameter.txt
 	MKFS_OPTS="-E android_sparse -t ext4 -L nixos -M /root -b 4096"
         ;;
     *)
@@ -184,7 +182,7 @@ if [ "${FS_TYPE}" = "ext4" ]; then
     make_ext4_img
     if [ ${TARGET_OS} != "eflasher" ]; then
         case ${TARGET_OS} in
-        openmediavault-*)
+        openmediavault-* | nixos* )
             # disable overlayfs for openmediavault
             cp ${TOP}/prebuilt/parameter-plain.txt ${TOP}/${TARGET_OS}/parameter.txt
             ;;
