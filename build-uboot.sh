@@ -50,7 +50,7 @@ function usage() {
     exit 0
 }
 
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
     usage
 fi
 
